@@ -1,0 +1,822 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Dark blue to light blue gradient */
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.light-theme {
+    background: linear-gradient(135deg, #e0f7ff, #b3e5fc); /* Light blue gradient for light theme */
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+}
+
+h1 {
+    color: #238eccc7;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.secret-phase, .verify-phase, .account-info, .crypto-list, .crypto-actions {
+    background: rgba(30, 35, 41, 0.8);
+    padding: 15px;
+    border-radius: 15px;
+    margin: 15px 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.light-theme .secret-phase,
+body.light-theme .verify-phase,
+body.light-theme .account-info,
+body.light-theme .crypto-list,
+body.light-theme .crypto-actions {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.secret-phase p {
+    user-select: all;
+    padding: 10px;
+    background: #2b3139;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 10px 0;
+    transition: background 0.3s ease;
+}
+
+body.light-theme .secret-phase p {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.secret-phase button, .verify-phase button, .crypto-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Match body gradient */
+    color: white; /* Match body text color */
+    cursor: pointer;
+    font-size: 14px;
+    margin: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme .secret-phase button,
+body.light-theme .verify-phase button,
+body.light-theme .crypto-actions button {
+    background: linear-gradient(135deg, #e0f7ff, #b3e5fc); /* Match light theme body gradient */
+    color: #333; /* Match light theme text color */
+}
+
+.secret-phase button:hover, .verify-phase button:hover, .crypto-actions button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px) scale(1.05);
+}
+
+.verify-phase input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #2b3139;
+    border-radius: 5px;
+    background: #2b3139;
+    color: white;
+    font-size: 16px;
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+body.light-theme .verify-phase input {
+    background: #e0e0e0;
+    border: 1px solid #ccc;
+    color: #333;
+}
+
+.account-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.account-info img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.account-info .balance {
+    font-size: 20px;
+    color: #00ff88;
+    margin: 10px 0;
+}
+
+.search-bar {
+    margin: 15px 0;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #2b3139;
+    border-radius: 5px;
+    background: #2b3139;
+    color: white;
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+body.light-theme .search-bar input {
+    background: #e0e0e0;
+    border: 1px solid #ccc;
+    color: #333;
+}
+/* Table Styles */
+.table-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between the two tables */
+    justify-content: center; /* Center the tables horizontally */
+    padding: 20px; /* Add some padding around the tables */
+  }
+  
+  table {
+    flex: 1 1 calc(50% - 20px); /* Each table takes up half the width minus the gap */
+    border-collapse: collapse;
+    background: rgba(30, 35, 41, 0.9); /* Match the crypto-list background */
+    border-radius: 8px; /* Add border radius for a modern look */
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  body.light-theme table {
+    background: rgba(255, 255, 255, 0.9); /* Light theme background */
+  }
+  
+  th, td {
+    padding: 15px 20px; /* Match the crypto-list padding */
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Match the crypto-list border */
+    font-size: 16px; /* Match the crypto-list font size */
+  }
+  
+  body.light-theme th, body.light-theme td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Light theme border */
+  }
+  
+  th {
+    background: rgba(255, 255, 255, 0.1); /* Match the crypto-list header background */
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  tr {
+    cursor: pointer; /* Make rows clickable */
+    transition: all 0.3s ease; /* Match the crypto-list transition */
+    background: rgba(30, 35, 41, 0.9); /* Match the crypto-list background */
+  }
+  
+  body.light-theme tr {
+    background: rgba(255, 255, 255, 0.9); /* Light theme background */
+  }
+  
+  tr:hover {
+    transform: translateY(-2px); /* Match the crypto-list hover effect */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Match the crypto-list hover shadow */
+    background: rgba(40, 45, 51, 0.9); /* Match the crypto-list hover background */
+  }
+  
+  body.light-theme tr:hover {
+    background: rgba(240, 240, 240, 0.9); /* Light theme hover background */
+  }
+  
+  tr::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: all 0.5s ease;
+  }
+  
+  tr:hover::before {
+    left: 100%;
+  }
+  
+  .positive {
+    color: #00ff88; /* Green for positive values */
+  }
+  
+  .negative {
+    color: #ff4444; /* Red for negative values */
+  }
+  
+  .coin-logo {
+    width: 30px; /* Match the crypto-list logo size */
+    height: 30px;
+    margin-right: 15px; /* Match the crypto-list gap */
+    vertical-align: middle;
+    border-radius: 50%; /* Match the crypto-list logo border radius */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Match the crypto-list logo shadow */
+    transition: transform 0.3s ease; /* Match the crypto-list logo transition */
+  }
+  
+  tr:hover .coin-logo {
+    transform: scale(1.1); /* Match the crypto-list logo hover effect */
+  }
+  
+  /* Small Graph (Sparkline) */
+  .small-graph {
+    width: 80px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .small-graph svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .small-graph .sparkline {
+    stroke-width: 2;
+    fill: none;
+  }
+  
+  .small-graph .sparkline.positive {
+    stroke: #00ff88; /* Green for positive trend */
+  }
+  
+  .small-graph .sparkline.negative {
+    stroke: #ff4444; /* Red for negative trend */
+  }
+  
+  /* Loading Spinner */
+  .loading {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #4a90e2; /* Light blue */
+  }
+  
+  /* Mobile-Specific Adjustments */
+  @media (max-width: 768px) {
+    .table-container {
+      flex-direction: column; /* Stack tables vertically on small screens */
+    }
+  
+    table {
+      flex: 1 1 100%; /* Each table takes full width on small screens */
+    }
+  
+    th, td {
+      padding: 12px 15px; /* Match the crypto-list mobile padding */
+      font-size: 14px; /* Match the crypto-list mobile font size */
+    }
+  
+    .coin-logo {
+      width: 25px; /* Match the crypto-list mobile logo size */
+      height: 25px;
+      margin-right: 10px; /* Match the crypto-list mobile gap */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    th, td {
+      padding: 10px 12px; /* Match the crypto-list mobile padding */
+      font-size: 13px; /* Match the crypto-list mobile font size */
+    }
+  
+    .coin-logo {
+      width: 20px; /* Match the crypto-list mobile logo size */
+      height: 20px;
+      margin-right: 8px; /* Match the crypto-list mobile gap */
+    }
+  }
+  
+  tr:hover .coin-logo {
+    transform: scale(1.1); /* Match the crypto-list logo hover effect */
+  }
+  
+  /* Small Graph (Sparkline) */
+  .small-graph {
+    width: 80px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .small-graph svg {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .small-graph .sparkline {
+    stroke-width: 2;
+    fill: none;
+  }
+  
+  .small-graph .sparkline.positive {
+    stroke: #00ff88; /* Green for positive trend */
+  }
+  
+  .small-graph .sparkline.negative {
+    stroke: #ff4444; /* Red for negative trend */
+  }
+  
+  /* Loading Spinner */
+  .loading {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+    color: #4a90e2; /* Light blue */
+  }
+  .coin-info {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap between the logo and text */
+  }
+  
+  .coin-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Adjust the gap between name and symbol */
+  }
+  
+  .coin-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #f0b90b; /* Match the crypto-list style */
+  }
+  
+  .coin-symbol {
+    font-size: 14px;
+    color: #888; /* Match the crypto-list style */
+  }
+  /* Mobile-Specific Adjustments */
+  @media (max-width: 768px) {
+    .table-container {
+      flex-direction: column; /* Stack tables vertically on small screens */
+    }
+  
+    table {
+      flex: 1 1 100%; /* Each table takes full width on small screens */
+    }
+  
+    th, td {
+      padding: 12px 15px; /* Match the crypto-list mobile padding */
+      font-size: 14px; /* Match the crypto-list mobile font size */
+    }
+  
+    .coin-logo {
+      width: 25px; /* Match the crypto-list mobile logo size */
+      height: 25px;
+      margin-right: 10px; /* Match the crypto-list mobile gap */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    th, td {
+      padding: 10px 12px; /* Match the crypto-list mobile padding */
+      font-size: 13px; /* Match the crypto-list mobile font size */
+    }
+  
+    .coin-logo {
+      width: 20px; /* Match the crypto-list mobile logo size */
+      height: 20px;
+      margin-right: 8px; /* Match the crypto-list mobile gap */
+    }
+  }
+.crypto-actions {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(30, 35, 41, 0.95);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    transition: all 0.4s ease;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -48%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+body.light-theme .crypto-actions {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+.crypto-actions h2 {
+    color: #2f92c0;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme .crypto-actions h2 {
+    color: #196d8fd2;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.crypto-actions button {
+    width: 100%;
+    margin: 12px 0;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Match body gradient */
+    color: white; /* Match body text color */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+body.light-theme .crypto-actions button {
+    background: linear-gradient(135deg, #e0f7ff, #b3e5fc); /* Match light theme body gradient */
+    color: #333; /* Match light theme text color */
+}
+
+.crypto-actions button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+}
+
+.crypto-actions button.back {
+    background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Match body gradient */
+    color: white; /* Match body text color */
+}
+
+body.light-theme .crypto-actions button.back {
+    background: linear-gradient(135deg, #e0f7ff, #b3e5fc); /* Match light theme body gradient */
+    color: #333; /* Match light theme text color */
+}
+
+#send-section .input-group {
+    background: rgba(30, 35, 41, 0.8); /* Match body background */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Match body border */
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+body.light-theme #send-section .input-group {
+    background: rgba(255, 255, 255, 0.8); /* Match light theme body background */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Match light theme body border */
+}
+
+#send-section .input-group:focus-within {
+    box-shadow: inset 0 2px 10px rgba(0, 255, 136, 0.2);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+#send-section .input-group img {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+#send-section .input-group input {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+}
+
+body.light-theme #send-section .input-group input {
+    color: #333;
+}
+
+#receive-section .input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(30, 35, 41, 0.8); /* Match body background */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Match body border */
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme #receive-section .input-group {
+    background: rgba(255, 255, 255, 0.8); /* Match light theme body background */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Match light theme body border */
+}
+
+#receive-section .input-group img {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+#receive-section .input-group p {
+    flex: 1;
+    margin: 0;
+    font-family: monospace;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+#receive-section .copy-icon {
+    background: #083b6b96;
+    color: #1e3c72;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#receive-section .copy-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+#receive-section .qr-code {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    display: inline-block;
+    margin: 20px auto;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+#receive-section .qr-code img {
+    width: 200px;
+    height: 200px;
+}
+
+#swap-section .input-group {
+    background: rgba(30, 35, 41, 0.8); /* Match body background */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Match body border */
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme #swap-section .input-group {
+    background: rgba(255, 255, 255, 0.8); /* Match light theme body background */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Match light theme body border */
+}
+
+#swap-section .input-group img {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+#swap-section .input-group select,
+#swap-section .input-group input {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+    appearance: none;
+}
+
+body.light-theme #swap-section .input-group select,
+body.light-theme #swap-section .input-group input {
+    color: #333;
+}
+
+#swap-section .input-group::after {
+    content: '▼';
+    font-size: 12px;
+    color: #f0b90b;
+    position: absolute;
+    right: 30px;
+    pointer-events: none;
+}
+
+#swap-section .swap-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#swap-section .swap-bar span {
+    background: #f0b90b;
+    color: #1e3c72;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#swap-section .swap-bar span:hover {
+    transform: rotate(180deg) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+#send-section, #receive-section, #swap-section {
+    animation: slideIn 0.4s ease;
+}
+
+.copy-icon {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: rgba(30, 35, 41, 0.8);
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.light-theme .theme-toggle {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle img {
+    width: 20px;
+    height: 20px;
+}
+
+.back-to-market {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Match body gradient */
+    color: white; /* Match body text color */
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme .back-to-market {
+    background: linear-gradient(135deg, #e0f7ff, #b3e5fc); /* Match light theme body gradient */
+    color: #333; /* Match light theme text color */
+}
+
+.back-to-market:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme .header h1 {
+    color: #1f3a5c;
+}
+
+body.light-theme .kyc-button {
+    background: linear-gradient(135deg, #e0f7ff, #b3e5fc); /* Match light theme body gradient */
+    color: #1f3a5c; /* Match light theme text color */
+}
+
+body.light-theme .kyc-button:hover {
+    background: linear-gradient(135deg, #b3e5fc, #e0f7ff); /* Match light theme body gradient */
+}
+
+.kyc-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Match body gradient */
+    color: white; /* Match body text color */
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.kyc-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #00ff88;
+    border-radius: 20px;
+    padding: 3px 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    margin-left: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    vertical-align: middle;
+}
+
+.verified-badge::before {
+    content: "✓";
+    margin-right: 3px;
+}
+
+.account-info {
+    position: relative;
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .secret-phase p {
+        font-size: 14px;
+    }
+
+    .crypto-list .coin {
+        width: 80px;
+    }
+
+    .crypto-actions {
+        width: 95%;
+    }
+
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
+    }
+
+    .back-to-market {
+        bottom: 10px;
+        right: 10px;
+    }
+}

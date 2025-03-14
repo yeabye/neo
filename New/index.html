@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Market</title>
+  <style>
+    /* Body and Global Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0a1f3d; /* Dark blue background */
+      color: #e0e0e0; /* Light text */
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(10, 31, 61, 0.9); /* Semi-transparent dark blue */
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      color: #4a90e2; /* Light blue */
+      margin: 0;
+    }
+
+    .header .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .header button {
+      background: #4a90e2; /* Light blue button */
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.3s ease;
+    }
+
+    .header button:hover {
+      background: #357abd; /* Darker blue on hover */
+    }
+
+    /* Slide-out Navigation */
+    .slide-out-nav {
+      position: fixed;
+      top: 0;
+      right: -300px; /* Start off-screen */
+      width: 250px;
+      height: 100%;
+      background: #1e1e1e; /* Dark background */
+      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+      transition: right 0.3s ease;
+      z-index: 1001;
+    }
+
+    .slide-out-nav.open {
+      right: 0; /* Slide in */
+    }
+
+    .slide-out-nav .nav-content {
+      padding: 20px;
+    }
+
+    .slide-out-nav .profile-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #4a90e2; /* Light blue profile icon */
+      margin-bottom: 20px;
+    }
+
+    .slide-out-nav .uid-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .slide-out-nav .uid-section p {
+      margin: 0;
+      font-size: 14px;
+      color: #e0e0e0;
+    }
+
+    .slide-out-nav .verified-badge {
+      background: #00ff88; /* Green verified badge */
+      border-radius: 20px;
+      padding: 3px 8px;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      margin-left: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .slide-out-nav .verified-badge::before {
+      content: "✓";
+      margin-right: 3px;
+    }
+
+    .slide-out-nav .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .slide-out-nav .nav-buttons button {
+      flex: 1 1 calc(33.33% - 10px); /* 3 buttons per row */
+      margin-bottom: 10px;
+      background: #4a90e2; /* Light blue button */
+      border: none;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.3s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+    }
+
+    .slide-out-nav .nav-buttons button.wide {
+      flex: 1 1 calc(50% - 10px); /* Wallet and Join Smart Contract side by side */
+    }
+
+    .slide-out-nav .nav-buttons button i {
+      margin-right: 10px;
+    }
+
+    .slide-out-nav .nav-buttons button:hover {
+      background: #357abd; /* Darker blue on hover */
+    }
+
+    .slide-out-nav .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: #e0e0e0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Ai smart Arbitrage Section */
+    .arbitrage-section {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .arbitrage-section h2 {
+      font-size: 24px;
+      color: #4a90e2; /* Light blue */
+      margin-bottom: 10px;
+    }
+
+    .arbitrage-section p {
+      font-size: 16px;
+      color: #e0e0e0;
+    }
+
+    /* Content Container */
+    .content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .text-content {
+      max-width: 100%;
+      text-align: center;
+    }
+
+    /* Image Container */
+    .image-container {
+      position: relative;
+      width: 100%;
+      height: 200px; /* Fixed height for consistency */
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensure the image covers the container */
+      border-radius: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .main-image.active {
+      opacity: 1;
+    }
+
+    /* Scroll Dots */
+    .scroll-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .scroll-dots .dot {
+      width: 10px;
+      height: 10px;
+      background: #4a90e2; /* Light blue */
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .scroll-dots .dot.active {
+      background: #00ff88; /* Green for active dot */
+    }
+
+    .scroll-dots .dot:hover {
+      background: #357abd; /* Darker blue on hover */
+    }
+
+    /* Market Container */
+    .market-container {
+      padding: 15px;
+      max-width: 100%; /* Ensure it fits the screen */
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+
+    /* Search Bar */
+    .search-bar {
+      margin-bottom: 15px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e0e0e0;
+      font-size: 14px;
+      box-sizing: border-box; /* Ensure input fits within container */
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: #4a90e2; /* Light blue */
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto; /* Enable horizontal scrolling on small screens */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 12px; /* Adjust font size for mobile */
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    tr {
+      cursor: pointer; /* Make rows clickable */
+      transition: background 0.3s ease;
+    }
+
+    tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .positive {
+      color: #00ff88; /* Green for positive values */
+    }
+
+    .negative {
+      color: #ff4444; /* Red for negative values */
+    }
+
+    .coin-logo {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    /* Small Graph (Sparkline) */
+    .small-graph {
+      width: 80px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .small-graph svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .small-graph .sparkline {
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .small-graph .sparkline.positive {
+      stroke: #00ff88; /* Green for positive trend */
+    }
+
+    .small-graph .sparkline.negative {
+      stroke: #ff4444; /* Red for negative trend */
+    }
+
+    /* Loading Spinner */
+    .loading {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #4a90e2; /* Light blue */
+    }
+  </style>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- Header with Buttons -->
+  <div class="header">
+    <div>
+      <h1>Crypto Market</h1>
+    </div>
+    <div class="buttons">
+      <button onclick="toggleSlideOutNav()">👤</button>
+    </div>
+  </div>
+
+  <!-- Slide-out Navigation -->
+  <div class="slide-out-nav" id="slideOutNav">
+    <div class="nav-content">
+      <button class="close-btn" onclick="toggleSlideOutNav()">✕</button>
+      <div class="profile-icon"></div>
+      <div class="uid-section" id="uid-section" style="display: none;">
+        <p id="uid"></p>
+        <div class="verified-badge" id="verified-badge" style="display: none;">Verified</div>
+      </div>
+      <div class="nav-buttons">
+        <button class="wide" onclick="goToPage('account')"><i class="fas fa-wallet"></i> Wallet</button>
+        <button class="wide" onclick="goToPage('join-smart-contract')"><i class="fas fa-handshake"></i> Join Smart Contract</button>
+        <button onclick="goToPage('transaction')"><i class="fas fa-exchange-alt"></i> Transaction</button>
+        <button onclick="goToPage('arbitrage')"><i class="fas fa-chart-line"></i> Arbitrage</button>
+        <button onclick="goToPage('mining')"><i class="fas fa-hard-hat"></i> Mining</button>
+        <button onclick="goToPage('help-loan')"><i class="fas fa-hand-holding-usd"></i> Help Loan</button>
+        <button onclick="goToPage('settings')"><i class="fas fa-cog"></i> Settings</button>
+        <button onclick="goToPage('fiat-currency-transaction')"><i class="fas fa-money-bill-wave"></i> Fiat Currency Transaction</button>
+        <button onclick="goToPage('contact')"><i class="fas fa-headset"></i> Online Service</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ai smart Arbitrage Section -->
+  <div class="arbitrage-section">
+    <h2>Ai smart Arbitrage</h2>
+    <p>Smart trading on 200 exchanges</p>
+    <!-- Main Content (Text + Image) -->
+    <div class="content-container">
+      <div class="text-content">
+      
+      </div>
+      <div class="image-container">
+        <img src="images/crypto28.webp" alt="Crypto 1" class="main-image active">
+        <img src="images/cypto23.jpg" alt="Crypto 2" class="main-image">
+        <img src="images/crypto15.png" alt="Crypto 3" class="main-image">
+      </div>
+    </div>
+    <!-- Scrollable Dots for Navigation -->
+    <div class="scroll-dots">
+      <span class="dot active" onclick="showSlide(0)"></span>
+      <span class="dot" onclick="showSlide(1)"></span>
+      <span class="dot" onclick="showSlide(2)"></span>
+    </div>
+  </div>
+
+  <!-- Market Container -->
+  <div class="market-container">
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search Cryptos..." oninput="filterCryptos()">
+    </div>
+    <div class="loading" id="loading">Loading...</div>
+
+    <!-- Table Container with Scroll -->
+    <div class="table-container">
+      <table id="crypto-table">
+        <thead>
+          <tr>
+            <th id="coin-header">Coin</th>
+            <th id="price-header">Price (USD)</th>
+            <th id="trend-header">7d Trend</th>
+            <th id="change-header">24h Change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Toggle Slide-out Navigation
+    function toggleSlideOutNav() {
+      const slideOutNav = document.getElementById("slideOutNav");
+      slideOutNav.classList.toggle("open");
+    }
+
+    // Redirect to Another Page
+    function goToPage(page) {
+      window.location.href = `${page}.html`;
+    }
+
+    // JavaScript for Image Slider
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      const images = document.querySelectorAll(".main-image");
+      const dots = document.querySelectorAll(".dot");
+
+      // Hide all images
+      images.forEach((image) => image.classList.remove("active"));
+      dots.forEach((dot) => dot.classList.remove("active"));
+
+      // Show the selected image and activate the corresponding dot
+      images[index].classList.add("active");
+      dots[index].classList.add("active");
+
+      currentSlide = index;
+    }
+
+    // Auto-slide functionality (optional)
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % 3; // Change 3 to the number of images
+      showSlide(currentSlide);
+    }, 5000); // Change slide every 5 seconds
+
+    // Initialize the first slide
+    showSlide(0);
+
+    // Fetch real-time crypto prices from CoinGecko API
+    async function fetchCryptoPrices() {
+      const loading = document.getElementById("loading");
+      const tableBody = document.querySelector("#crypto-table tbody");
+
+      try {
+        const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=35&page=1&sparkline=true");
+        const data = await response.json();
+
+        tableBody.innerHTML = data.map(coin => ` 
+          <tr onclick="viewDetails('${coin.id}')">
+            <td>
+              <img src="${coin.image}" alt="${coin.name}" class="coin-logo">
+              ${coin.name} (${coin.symbol.toUpperCase()})
+            </td>
+            <td>$${coin.current_price.toLocaleString()}</td>
+            <td>
+              <div class="small-graph">
+                <svg class="sparkline ${coin.sparkline_in_7d.price[coin.sparkline_in_7d.price.length - 1] >= coin.sparkline_in_7d.price[0] ? "positive" : "negative"}">
+                  <polyline points="${generateSparklinePoints(coin.sparkline_in_7d.price)}"></polyline>
+                </svg>
+              </div>
+            </td>
+            <td class="${coin.price_change_percentage_24h >= 0 ? "positive" : "negative"}">
+              ${coin.price_change_percentage_24h.toFixed(2)}%
+            </td>
+          </tr>
+        `).join("");
+
+        loading.style.display = "none";
+      } catch (error) {
+        loading.textContent = "Failed to load data. Please try again later.";
+        console.error("Error fetching crypto prices:", error);
+      }
+    }
+
+    // Generate sparkline points for the graph
+    function generateSparklinePoints(prices) {
+      const max = Math.max(...prices);
+      const min = Math.min(...prices);
+      const range = max - min;
+      const width = 80;
+      const height = 30;
+      return prices
+        .map((price, index) => {
+          const x = (index / (prices.length - 1)) * width;
+          const y = height - ((price - min) / range) * height;
+          return `${x},${y}`;
+        })
+        .join(" ");
+    }
+
+    // Filter cryptos based on search input
+    function filterCryptos() {
+      const searchTerm = document.getElementById("search").value.toLowerCase();
+      const rows = document.querySelectorAll("#crypto-table tbody tr");
+      rows.forEach(row => {
+        const name = row.querySelector("td").textContent.toLowerCase();
+        if (name.includes(searchTerm)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    // View Details
+    function viewDetails(coinId) {
+      window.location.href = `coin.html?name=${coinId.toLowerCase()}`;
+    }
+
+    // Check if user is verified (KYC and secret phase completed)
+    function checkUserVerification() {
+      const isSecretPhaseVerified = localStorage.getItem("verified") === "true";
+      const isKYCVerified = localStorage.getItem("kycVerified") === "true";
+      const uid = localStorage.getItem("uid");
+      const uidSection = document.getElementById("uid-section");
+      const verifiedBadge = document.getElementById("verified-badge");
+
+      // Only show UID and verified badge if both KYC and secret phase are completed
+      if (isSecretPhaseVerified && isKYCVerified && uid) {
+        uidSection.style.display = "flex";
+        verifiedBadge.style.display = "inline-flex";
+        document.getElementById("uid").textContent = `UID: ${uid}`;
+      } else {
+        uidSection.style.display = "none";
+        verifiedBadge.style.display = "none";
+      }
+    }
+
+    // Initialize
+    checkUserVerification();
+    fetchCryptoPrices();
+  </script>
+</body>
+</html>

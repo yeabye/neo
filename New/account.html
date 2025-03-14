@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Secret Phase Section -->
+    <div class="secret-phase" id="secret-phase">
+      <h1>Your Secret Phrase</h1>
+      <p id="secret-words"></p>
+      <button onclick="copySecretPhrase()">Copy Secret Phrase</button>
+      <button onclick="showVerifyPhase()">Next</button>
+    </div>
+
+   <!-- Verify Phase Section -->
+<div class="verify-phase" id="verify-phase" style="display: none;">
+  <h1>Verify Secret Phrase</h1>
+  <p id="verify-instructions"></p>
+  <div id="verify-inputs"></div>
+  <button onclick="verifySecretPhrase()">Verify</button>
+</div>
+    <div class="header">
+      <h1>Your Crypto Wallet</h1>
+      <button id="kyc-button" class="kyc-button" onclick="goToKYCPage()">Complete KYC</button>
+    </div>
+    <script>
+      function goToKYCPage() {
+        window.location.href = "kyc.html";
+      }
+    </script>
+    <!-- Account Information Section -->
+    <div class="account-info" id="account-info" style="display: none;">
+      <img id="profile-icon" src="images/cypto33.png" alt="Profile Icon" onclick="uploadImage()">
+      <h2 id="uid"></h2>
+      <div class="balance">Balance: $0.00</div>
+      <div class="search-bar">
+        <input type="text" id="search-crypto" placeholder="Search Cryptos..." oninput="filterCryptos()">
+      </div>
+      <div class="crypto-list" id="crypto-list">
+        <h2>Cryptos</h2>
+        <div class="coins" id="coins"></div>
+      </div>
+    </div>
+
+    <!-- Crypto Actions Section -->
+    <div class="crypto-actions" id="crypto-actions">
+      <h2 id="crypto-name"></h2>
+      <button class="send" onclick="showSendSection()">
+        <span>Send</span>
+        <span>📤</span>
+      </button>
+      <button class="receive" onclick="showReceiveSection()">
+        <span>Receive</span>
+        <span>📥</span>
+      </button>
+      <button class="swap" onclick="showSwapSection()">
+        <span>Swap</span>
+        <span>🔄</span>
+      </button>
+      <button class="back" onclick="showCryptoList()">Back</button>
+    </div>
+
+    <!-- Send Section -->
+    <div class="crypto-actions" id="send-section" style="display: none;">
+      <h2>Send <span id="send-crypto-name"></span></h2>
+      <div class="input-group">
+        <img id="send-crypto-logo" src="" alt="Crypto Logo">
+        <input type="number" id="send-amount" placeholder="Amount">
+      </div>
+      <div class="input-group">
+        <img src="images/btc.png" alt="Address Icon">
+        <input type="text" id="send-address" placeholder="Recipient Address">
+      </div>
+      <button onclick="sendCrypto()">Send</button>
+      <button class="back" onclick="goBackToCryptoActions()">Back</button>
+    </div>
+
+    <!-- Receive Section -->
+    <div class="crypto-actions" id="receive-section" style="display: none;">
+      <h2>Receive <span id="receive-crypto-name"></span></h2>
+      <div class="input-group">
+        <img id="receive-crypto-logo" src="" alt="Crypto Logo">
+        <p id="deposit-address"></p>
+        <span class="copy-icon" onclick="copyAddress()">📋</span>
+      </div>
+      <div class="qr-code" id="qr-code">
+        <img id="qr-image" src="" alt="QR Code">
+      </div>
+      <button class="back" onclick="goBackToCryptoActions()">Back</button>
+    </div>
+
+    <!-- Swap Section -->
+    <div class="crypto-actions swap-section" id="swap-section" style="display: none;">
+      <h2>Swap Crypto</h2>
+      <div class="input-group">
+        <img id="swap-from-logo" src="" alt="From Crypto Logo">
+        <select id="swap-from">
+          <option value="btc">Bitcoin (BTC)</option>
+          <option value="eth">Ethereum (ETH)</option>
+          <option value="bnb">Binance Coin (BNB)</option>
+          <option value="ada">Cardano (ADA)</option>
+          <option value="sol">Solana (SOL)</option>
+          <option value="xrp">Ripple (XRP)</option>
+          <option value="doge">Dogecoin (DOGE)</option>
+          <option value="dot">Polkadot (DOT)</option>
+          <option value="uni">Uniswap (UNI)</option>
+          <option value="link">Chainlink (LINK)</option>
+          <option value="ltc">Litecoin (LTC)</option>
+          <option value="bch">Bitcoin Cash (BCH)</option>
+          <option value="matic">Polygon (MATIC)</option>
+          <option value="xlm">Stellar (XLM)</option>
+          <option value="vet">VeChain (VET)</option>
+          <option value="trx">TRON (TRX)</option>
+          <option value="ftt">FTX Token (FTT)</option>
+          <option value="atom">Cosmos (ATOM)</option>
+          <option value="xtz">Tezos (XTZ)</option>
+          <option value="usdt">USDT</option>
+          <!-- Additional Coins -->
+          <option value="avax">Avalanche (AVAX)</option>
+          <option value="algo">Algorand (ALGO)</option>
+          <option value="neo">NEO (NEO)</option>
+          <option value="dash">Dash (DASH)</option>
+          <option value="zec">Zcash (ZEC)</option>
+          <option value="xmr">Monero (XMR)</option>
+          <option value="eos">EOS (EOS)</option>
+          <option value="iota">IOTA (MIOTA)</option>
+          <option value="waves">Waves (WAVES)</option>
+          <option value="hbar">Hedera (HBAR)</option>
+          <option value="icp">Internet Computer (ICP)</option>
+          <option value="theta">Theta (THETA)</option>
+          <option value="fil">Filecoin (FIL)</option>
+          <option value="xtz">Tezos (XTZ)</option>
+          <option value="klay">Klaytn (KLAY)</option>
+          <option value="zil">Zilliqa (ZIL)</option>
+          <option value="enj">Enjin (ENJ)</option>
+          <option value="bat">Basic Attention Token (BAT)</option>
+          <option value="mana">Decentraland (MANA)</option>
+          <option value="sand">The Sandbox (SAND)</option>
+        </select>
+      </div>
+      <div class="swap-bar">
+        <span onclick="swapDirection()">↕️</span>
+      </div>
+      <div class="input-group">
+        <img id="swap-to-logo" src="" alt="To Crypto Logo">
+        <select id="swap-to">
+          <option value="eth">Ethereum (ETH)</option>
+          <option value="btc">Bitcoin (BTC)</option>
+          <option value="bnb">Binance Coin (BNB)</option>
+          <option value="ada">Cardano (ADA)</option>
+          <option value="sol">Solana (SOL)</option>
+          <option value="xrp">Ripple (XRP)</option>
+          <option value="doge">Dogecoin (DOGE)</option>
+          <option value="dot">Polkadot (DOT)</option>
+          <option value="uni">Uniswap (UNI)</option>
+          <option value="link">Chainlink (LINK)</option>
+          <option value="ltc">Litecoin (LTC)</option>
+          <option value="bch">Bitcoin Cash (BCH)</option>
+          <option value="matic">Polygon (MATIC)</option>
+          <option value="xlm">Stellar (XLM)</option>
+          <option value="vet">VeChain (VET)</option>
+          <option value="trx">TRON (TRX)</option>
+          <option value="ftt">FTX Token (FTT)</option>
+          <option value="atom">Cosmos (ATOM)</option>
+          <option value="xtz">Tezos (XTZ)</option>
+          <option value="usdt">USDT</option>
+          <!-- Additional Coins -->
+          <option value="avax">Avalanche (AVAX)</option>
+          <option value="algo">Algorand (ALGO)</option>
+          <option value="neo">NEO (NEO)</option>
+          <option value="dash">Dash (DASH)</option>
+          <option value="zec">Zcash (ZEC)</option>
+          <option value="xmr">Monero (XMR)</option>
+          <option value="eos">EOS (EOS)</option>
+          <option value="iota">IOTA (MIOTA)</option>
+          <option value="waves">Waves (WAVES)</option>
+          <option value="hbar">Hedera (HBAR)</option>
+          <option value="icp">Internet Computer (ICP)</option>
+          <option value="theta">Theta (THETA)</option>
+          <option value="fil">Filecoin (FIL)</option>
+          <option value="xtz">Tezos (XTZ)</option>
+          <option value="klay">Klaytn (KLAY)</option>
+          <option value="zil">Zilliqa (ZIL)</option>
+          <option value="enj">Enjin (ENJ)</option>
+          <option value="bat">Basic Attention Token (BAT)</option>
+          <option value="mana">Decentraland (MANA)</option>
+          <option value="sand">The Sandbox (SAND)</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <img src="images/usdt.png" alt="Amount Icon">
+        <input type="number" id="swap-amount" placeholder="Amount">
+      </div>
+      <button onclick="swapCrypto()">Swap</button>
+      <button class="back" onclick="goBackToCryptoActions()">Back</button>
+    </div>
+  </div>
+
+  <!-- Back to Market Button -->
+  <button class="back-to-market" onclick="goToMarketPage()">Back to Market</button>
+  <script src="script.js">
+    // Add this function to handle the redirection
+   
+  </script>
+  </body>
+  </html>

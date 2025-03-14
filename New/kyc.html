@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KYC Verification</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Dark blue gradient */
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #f0b90b; /* Gold color for headings */
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .kyc-form {
+      background: rgba(15, 30, 50, 0.8); /* Semi-transparent dark blue */
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      background: rgba(31, 58, 92, 0.8); /* Semi-transparent dark blue */
+      color: white;
+      font-size: 16px;
+    }
+
+    .document-type {
+      margin: 15px 0;
+    }
+
+    .document-type label {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
+    .document-type input {
+      margin-right: 8px;
+    }
+
+    .file-upload {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      border: 2px dashed #f0b90b; /* Gold border */
+      border-radius: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .file-upload:hover {
+      background: rgba(240, 185, 11, 0.1); /* Light gold background on hover */
+    }
+
+    .file-upload p {
+      margin: 10px 0;
+      color: #ccc;
+    }
+
+    .file-upload-icon {
+      font-size: 40px;
+      color: #f0b90b; /* Gold color */
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 5px;
+      background: linear-gradient(45deg, #1f3a5c, #0a192f); /* Dark blue gradient */
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 30px;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(45deg, #0a192f, #1f3a5c); /* Reverse gradient on hover */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .submit-btn:disabled {
+      background: #555; /* Gray background for disabled button */
+      cursor: not-allowed;
+    }
+
+    .back-btn {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #f0b90b; /* Gold color */
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+
+    .status-message {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      background: rgba(0, 255, 136, 0.1); /* Light green background */
+      border: 1px solid #00ff88; /* Green border */
+    }
+
+    .status-message h2 {
+      color: #00ff88; /* Green color */
+      margin-bottom: 10px;
+    }
+
+    .status-message p {
+      margin: 10px 0;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #00ff88; /* Green color */
+      animation: spin 1s ease-in-out infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+
+      .kyc-form {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>KYC Verification</h1>
+
+    <form class="kyc-form" id="kyc-form">
+      <div class="form-group">
+        <label for="full-name">Full Name (as per ID document)</label>
+        <input type="text" id="full-name" name="fullName" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+      </div>
+
+      <div class="form-group">
+        <label>Document Type</label>
+        <div class="document-type">
+          <label>
+            <input type="radio" name="documentType" value="passport" checked> Passport (Recommended)
+          </label>
+          <label>
+            <input type="radio" name="documentType" value="id-card"> ID Card
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Upload Document</label>
+        <div class="file-upload" onclick="triggerFileUpload()">
+          <div class="file-upload-icon">📄</div>
+          <p>Click to upload or drag and drop</p>
+          <p>Supported formats: JPG, PNG, PDF (Max: 5MB)</p>
+          <input type="file" id="document-upload" name="document" style="display: none;" accept=".jpg, .jpeg, .png, .pdf" required>
+          <p id="file-name"></p>
+        </div>
+      </div>
+
+      <button type="button" class="submit-btn" id="submit-btn" onclick="submitKYC()" disabled>Submit Verification</button>
+      <a href="account.html" class="back-btn">Back to Account</a>
+    </form>
+
+    <div class="status-message" id="status-message">
+      <div class="loader"></div>
+      <h2>Verification In Progress</h2>
+      <p>We are reviewing your submitted documents.</p>
+      <p>Please do not close this window.</p>
+    </div>
+  </div>
+
+  <script>
+    function triggerFileUpload() {
+      document.getElementById('document-upload').click();
+    }
+
+    document.getElementById('document-upload').addEventListener('change', function (e) {
+      if (e.target.files.length > 0) {
+        document.getElementById('file-name').textContent = e.target.files[0].name;
+      }
+    });
+
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+      return emailRegex.test(email);
+    }
+
+    document.getElementById('email').addEventListener('input', function () {
+      const email = this.value;
+      const submitBtn = document.getElementById('submit-btn');
+
+      if (validateEmail(email)) {
+        submitBtn.disabled = false; // Enable submit button
+      } else {
+        submitBtn.disabled = true; // Disable submit button
+      }
+    });
+
+    function startCountdown() {
+      let minutes = 1;
+      let seconds = 0;
+      const countdownElement = document.getElementById('countdown');
+
+      const interval = setInterval(() => {
+        if (seconds === 0) {
+          if (minutes === 0) {
+            clearInterval(interval);
+            return;
+          }
+          minutes--;
+          seconds = 59;
+        } else {
+          seconds--;
+        }
+
+        const formattedMinutes = minutes.toString().padStart(1, '0');
+        const formattedSeconds = seconds.toString().padStart(2, '0');
+        countdownElement.textContent = `Time remaining: ${formattedMinutes}:${formattedSeconds}`;
+      }, 1000);
+    }
+
+    function submitKYC() {
+      const fullName = document.getElementById('full-name').value;
+      const email = document.getElementById('email').value;
+      const documentType = document.querySelector('input[name="documentType"]:checked').value;
+      const documentFile = document.getElementById('document-upload').files[0];
+
+      // Validate email
+      if (!validateEmail(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      if (!fullName || !email || !documentFile) {
+        alert('Please fill in all fields and upload a document.');
+        return;
+      }
+
+      // Hide form and show status message
+      document.getElementById('kyc-form').style.display = 'none';
+      document.getElementById('status-message').style.display = 'block';
+
+      // Start countdown
+      startCountdown();
+
+      // Simulate verification process - exactly 7 minutes
+      setTimeout(() => {
+        // Store verification status in localStorage
+        localStorage.setItem('kycVerified', 'true');
+
+        // Redirect back to account page
+        window.location.href = 'account.html';
+      }, 30000); // Exactly 7 minutes (420,000 milliseconds)
+    }
+  </script>
+</body>
+</html>

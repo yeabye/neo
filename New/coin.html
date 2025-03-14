@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coin Details</title>
+  <!-- TradingView Widget -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0a1f3d; /* Dark blue background */
+      color: #e0e0e0; /* Light text */
+    }
+
+    .recent-trades .up { color: #00ff88; } /* Green for positive values */
+    .recent-trades .down { color: #ff4444; } /* Red for negative values */
+
+    /* Navigation Bar */
+    nav {
+      background: rgba(10, 31, 61, 0.9); /* Semi-transparent dark blue */
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    nav button {
+      color: white;
+      background: #4a90e2; /* Light blue button */
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+      margin: 0 5px;
+    }
+
+    nav button:hover {
+      background: #357abd; /* Darker blue on hover */
+    }
+
+    .coin-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #4a90e2; /* Light blue text */
+    }
+
+    /* Main Container */
+    .container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Left Panel (Chart) */
+    .left-panel {
+      flex: 2; /* Takes more space */
+    }
+
+    .chart-container {
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      height: 600px; /* Fixed height for the chart */
+      position: relative;
+    }
+
+    /* Right Panel (Features) */
+    .right-panel {
+      flex: 1; /* Takes less space */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .recent-trades, .trade-panel, .positions, .open-orders {
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #4a90e2; /* Light blue text */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+    }
+
+    .bid {
+      color: #00ff88; /* Green for bid */
+    }
+
+    .ask {
+      color: #ff4444; /* Red for ask */
+    }
+
+    .trade-panel input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .trade-panel input:focus {
+      outline: none;
+      border-color: #4a90e2; /* Light blue border on focus */
+    }
+
+    .trade-panel button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+    }
+
+    .trade-panel button.buy {
+      background: #00ff88; /* Green for buy button */
+      color: #1e3c72; /* Dark blue text */
+    }
+
+    .trade-panel button.sell {
+      background: #ff4444; /* Red for sell button */
+      color: white;
+    }
+
+    .trade-panel button:hover {
+      opacity: 0.9;
+    }
+
+    /* Back Icon */
+    .back-icon {
+      font-size: 24px;
+      cursor: pointer;
+      color: #4a90e2; /* Light blue */
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 10px;
+      }
+
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      nav button {
+        width: 100%;
+        margin: 5px 0;
+      }
+
+      .left-panel, .right-panel {
+        width: 100%;
+      }
+
+      .chart-container {
+        height: 400px; /* Adjusted height for mobile */
+        padding: 10px;
+      }
+
+      .recent-trades, .trade-panel, .positions, .open-orders {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      th, td {
+        padding: 8px;
+        font-size: 14px;
+      }
+
+      .trade-panel input, .trade-panel button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div>
+      <span class="back-icon" onclick="window.location.href='index.html'">←</span>
+      <button onclick="window.location.href='account.html'">Account</button>
+      <button onclick="window.location.href='contact.html'">Contact Us</button>
+    </div>
+    <div class="coin-header" id="coin-header">
+      <span id="coin-name"></span>
+    </div>
+    <div>
+      <span id="user-balance">Balance: $0.00</span>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Left Panel (Chart) -->
+    <div class="left-panel">
+      <div class="chart-container">
+        <!-- TradingView Widget -->
+        <div id="tradingview-chart" style="height: 100%; width: 100%;"></div>
+      </div>
+    </div>
+
+    <!-- Right Panel (Features) -->
+    <div class="right-panel">
+      <!-- Recent Trades -->
+      <div class="recent-trades">
+        <h2>Recent Trades</h2>
+        <table id="recent-trades">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Price</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="recent-trades-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Trade Panel -->
+      <div class="trade-panel">
+        <h2>Trade</h2>
+        <input type="number" id="trade-amount" placeholder="Amount">
+        <input type="number" id="trade-price" placeholder="Price">
+        <button class="buy" onclick="placeOrder('buy')">Buy/Long</button>
+        <button class="sell" onclick="placeOrder('sell')">Sell/Short</button>
+      </div>
+
+      <!-- Positions -->
+      <div class="positions">
+        <h2>Positions</h2>
+        <table id="positions-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Size</th>
+              <th>Entry Price</th>
+              <th>PnL</th>
+            </tr>
+          </thead>
+          <tbody id="positions-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Open Orders -->
+      <div class="open-orders">
+        <h2>Open Orders</h2>
+        <table id="open-orders-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Side</th>
+              <th>Price</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="open-orders-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Coin name to symbol mapping
+    const coinSymbols = {
+      bitcoin: "BTC",
+      ethereum: "ETH",
+      binancecoin: "BNB",
+      ripple: "XRP",
+      cardano: "ADA",
+      solana: "SOL",
+      polkadot: "DOT",
+      dogecoin: "DOGE",
+      avalanche: "AVAX",
+      litecoin: "LTC",
+      tether: "USDT",
+      dai: "DAI",
+      busd: "BUSD",
+      tron: "TRX",
+      wrapped: "wbtcs",
+      monero: "XMR",
+      uniswap: "uni",
+      near: "near",
+      lidostaked: "steth",
+      mantra: "OM",
+      usdcoin: "usdc",
+      hedera: "hbar",
+      leo: "leo",
+      usds: "usds",
+      sui: "sui",
+      toncoin: "ton",
+      // Add more coins as needed
+    };
+
+    // Initialize TradingView Chart
+    function initTradingViewChart(symbol) {
+      let tradingPair;
+      if (symbol === "USDT" || symbol === "USDC" || symbol === "DAI" || symbol === "BUSD") {
+        // For stablecoins, pair them with USDT (e.g., USDC/USDT)
+        tradingPair = `BINANCE:${symbol.toUpperCase()}USDT`;
+      } else {
+        // For other coins, pair them with USDT (e.g., BTC/USDT)
+        tradingPair = `BINANCE:${symbol.toUpperCase()}USDT`;
+      }
+
+      new TradingView.widget({
+        container_id: "tradingview-chart",
+        autosize: true,
+        symbol: tradingPair, // Trading pair (e.g., BTC/USDT or USDC/USDT)
+        interval: "1",
+        timezone: "Etc/UTC",
+        theme: "dark",
+        style: "1",
+        locale: "en",
+        toolbar_bg: "#1e2329",
+        enable_publishing: false,
+        hide_side_toolbar: false,
+        allow_symbol_change: true,
+        details: true,
+        hotlist: true,
+        calendar: true,
+        studies: [
+          "ROC@tv-basicstudies",
+          "StochasticRSI@tv-basicstudies",
+          "MASimple@tv-basicstudies"
+        ],
+      });
+    }
+
+    // Initialize
+    let lastPrice = null;
+    document.addEventListener('DOMContentLoaded', function() {
+      const coinSymbol = "BTCUSDT";
+      const coinName = new URLSearchParams(window.location.search).get('name');
+      if (coinName) {
+        const symbol = coinSymbols[coinName.toLowerCase()]; // Get symbol from mapping
+        if (!symbol) {
+          alert('Invalid coin name!');
+          window.location.href = 'index.html';
+          return;
+        }
+
+        // Update coin name in header
+        const coinNameElement = document.getElementById('coin-name');
+        coinNameElement.textContent = coinName.toUpperCase();
+
+        // Initialize TradingView Chart
+        initTradingViewChart(symbol);
+
+        // Add some sample data to positions and open orders
+        document.getElementById('positions-body').innerHTML = `
+          <tr>
+            <td>${symbol.toUpperCase()}</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>0.00</td>
+          </tr>
+        `;
+
+        document.getElementById('open-orders-body').innerHTML = `
+          <tr>
+            <td>${symbol.toUpperCase()}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+        `;
+
+        // Connect to Binance WebSocket for real-time data
+        const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}usdt@trade`);
+        ws.onmessage = (event) => {
+          const tradeData = JSON.parse(event.data);
+          const price = parseFloat(tradeData.p).toFixed(2);
+          const amount = parseFloat(tradeData.q).toFixed(4);
+          const time = new Date(tradeData.T).toLocaleTimeString();
+
+          let priceClass = "";
+          if (lastPrice !== null) {
+            priceClass = price > lastPrice ? "up" : price < lastPrice ? "down" : "";
+          }
+          lastPrice = price;
+
+          // Update recent trades table
+          const recentTradesBody = document.getElementById('recent-trades-body');
+          const newRow = `<tr class="${priceClass}">
+            <td>${time}</td>
+            <td>${price}</td>
+            <td>${amount}</td>
+          </tr>`;
+          recentTradesBody.insertAdjacentHTML('afterbegin', newRow);
+
+          // Keep only the last 10 trades
+          if (recentTradesBody.children.length > 10) {
+            recentTradesBody.removeChild(recentTradesBody.lastChild);
+          }
+        };
+      } else {
+        // Redirect to market page if no coin is selected
+        window.location.href = 'index.html';
+      }
+    });
+
+    function placeOrder(type) {
+      alert("Make a deposit first");
+    }
+  </script>
+</body>
+</html>

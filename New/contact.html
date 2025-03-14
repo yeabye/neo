@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <style>
+   body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0a192f, #1f3a5c); /* Dark blue gradient */
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 90%;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background: rgba(15, 30, 50, 0.8); /* Semi-transparent dark blue */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #bb86fc; /* Purple accent color */
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+input[type="text"], input[type="email"], textarea {
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(31, 58, 92, 0.8); /* Semi-transparent dark blue */
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(45deg, #1f3a5c, #0a192f); /* Dark blue gradient */
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background: linear-gradient(45deg, #0a192f, #1f3a5c); /* Reverse gradient on hover */
+}
+
+.chat-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #1f3a5c, #0a192f); /* Dark blue gradient */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.chat-button:hover {
+  background: linear-gradient(45deg, #0a192f, #1f3a5c); /* Reverse gradient on hover */
+}
+
+/* Chat Popup Design */
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 90%;
+  max-width: 350px;
+  height: 500px;
+  background: rgba(15, 30, 50, 0.9); /* Semi-transparent dark blue */
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  overflow: hidden;
+  border: 2px solid #bb86fc; /* Purple accent border */
+}
+
+.chat-header {
+  background: linear-gradient(45deg, #1f3a5c, #0a192f); /* Dark blue gradient */
+  padding: 15px;
+  border-radius: 15px 15px 0 0;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.chat-body {
+  padding: 15px;
+  height: calc(100% - 150px);
+  overflow-y: auto;
+  background-color: rgba(15, 30, 50, 0.8); /* Semi-transparent dark blue */
+}
+
+.chat-message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+  font-size: 14px;
+}
+
+.chat-message.customer {
+  background: linear-gradient(45deg, #1f3a5c, #0a192f); /* Dark blue gradient */
+  color: white;
+  margin-left: auto;
+}
+
+.chat-message.agent {
+  background: rgba(31, 58, 92, 0.8); /* Semi-transparent dark blue */
+  color: #e0e0e0;
+  margin-right: auto;
+}
+
+.chat-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 30, 50, 0.9); /* Semi-transparent dark blue */
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chat-footer input[type="text"] {
+  width: calc(100% - 90px);
+  padding: 10px;
+  background: rgba(31, 58, 92, 0.8); /* Semi-transparent dark blue */
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.chat-footer button {
+  width: 80px;
+  padding: 10px;
+  background: linear-gradient(45deg, #1f3a5c, #0a192f); /* Dark blue gradient */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 5px;
+  margin-left: 10px;
+  transition: background 0.3s ease;
+}
+
+.chat-footer button:hover {
+  background: linear-gradient(45deg, #0a192f, #1f3a5c); /* Reverse gradient on hover */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #bb86fc; /* Purple accent color */
+}
+
+/* Mobile-Only Design */
+@media (max-width: 767px) {
+  .chat-popup {
+    width: 90%;
+    height: 70%;
+    bottom: 10px;
+    right: 5%;
+  }
+
+  .chat-body {
+    height: calc(100% - 140px);
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Contact Us</h2>
+    <form id="contact-form" action="https://formspree.io/f/xzzdnobj" method="POST">
+      <label for="full-name">Full Name:</label>
+      <input type="text" id="full-name" name="full-name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <span id="email-error" style="color: #ff4444; font-size: 12px; display: none;">Please enter a valid email address.</span>
+
+      <label for="feedback">Your Feedback:</label>
+      <textarea id="feedback" name="feedback" rows="5" required></textarea>
+
+      <input type="submit" value="Submit">
+    </form>
+
+    <button class="chat-button" onclick="openChatPopup()">Customer Service Chat</button>
+  </div>
+
+  <!-- New Chat Popup Window -->
+  <div id="chat-popup" class="chat-popup">
+    <div class="chat-header">
+      Customer Service
+      <button class="close-button" onclick="closeChatPopup()">×</button>
+    </div>
+    <div class="chat-body" id="chat-message-container">
+      <div class="chat-message agent">Hi! How can we help you today?</div>
+    </div>
+    <div class="chat-footer">
+      <input type="text" id="chat-message" placeholder="Type your message..." required>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Open the chat popup
+    function openChatPopup() {
+      document.getElementById('chat-popup').style.display = 'block';
+    }
+
+    // Close the chat popup
+    function closeChatPopup() {
+      document.getElementById('chat-popup').style.display = 'none';
+    }
+
+    // Send chat message
+    function sendMessage() {
+      const message = document.getElementById('chat-message').value;
+
+      if (message) {
+        // Add the user's message to the chat
+        const userMessage = document.createElement('div');
+        userMessage.classList.add('chat-message', 'customer');
+        userMessage.textContent = message;
+        document.getElementById('chat-message-container').appendChild(userMessage);
+
+        // Simulate a response from the agent
+        setTimeout(() => {
+          const agentMessage = document.createElement('div');
+          agentMessage.classList.add('chat-message', 'agent');
+          agentMessage.textContent = "Thank you for your message! We'll get back to you shortly.";
+          document.getElementById('chat-message-container').appendChild(agentMessage);
+
+          // Scroll to the bottom of the chat window
+          document.getElementById('chat-message-container').scrollTop = document.getElementById('chat-message-container').scrollHeight;
+        }, 1000);
+
+        // Clear the message input field
+        document.getElementById('chat-message').value = '';
+
+        // Scroll to the bottom of the chat window
+        document.getElementById('chat-message-container').scrollTop = document.getElementById('chat-message-container').scrollHeight;
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('contact-form').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      // Submit the form to Formspree
+      fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Your message has been submitted successfully!');
+          document.getElementById('contact-form').reset(); // Reset the form
+        } else {
+          alert('There was an error submitting your message. Please try again.');
+        }
+      })
+      .catch(error => {
+        alert('There was an error submitting your message. Please try again.');
+      });
+    });
+    // Function to validate email format
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+  return emailRegex.test(email);
+}
+
+// Add event listener to the email input field
+document.getElementById('email').addEventListener('input', function () {
+  const emailInput = this.value;
+  const emailError = document.getElementById('email-error');
+
+  if (!validateEmail(emailInput)) {
+    emailError.style.display = 'block'; // Show error message
+  } else {
+    emailError.style.display = 'none'; // Hide error message
+  }
+});
+
+// Add validation to the form submission
+document.getElementById('contact-form').addEventListener('submit', function (event) {
+  const emailInput = document.getElementById('email').value;
+  const emailError = document.getElementById('email-error');
+
+  if (!validateEmail(emailInput)) {
+    emailError.style.display = 'block'; // Show error message
+    event.preventDefault(); // Prevent form submission
+  } else {
+    emailError.style.display = 'none'; // Hide error message
+  }
+});
+  </script>
+</body>
+</html>
